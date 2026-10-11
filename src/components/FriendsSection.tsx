@@ -12,6 +12,71 @@ interface FriendsSectionProps {
   onResetDefault: () => void;
 }
 
+// Helper component for Friend card photo with initials fallback
+const FriendCardPhoto: React.FC<{
+  friend: Friend;
+  isGolden?: boolean;
+}> = ({ friend, isGolden }) => {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [friend.photoUrl]);
+
+  // Extract clean 2-letter initials
+  const getInitials = (fullName: string) => {
+    const parts = fullName.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const initials = getInitials(friend.name);
+
+  return (
+    <div
+      className={`w-32 h-32 rounded-2xl overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 flex items-center justify-center ${
+        isGolden
+          ? 'border-4 border-slate-900 bg-amber-200 ring-2 ring-amber-400'
+          : 'border-3 border-slate-900 bg-slate-900'
+      }`}
+    >
+      {!hasError && friend.photoUrl ? (
+        <img
+          src={friend.photoUrl}
+          alt={friend.name}
+          className="w-full h-full object-cover"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <div
+          className={`w-full h-full flex flex-col items-center justify-center p-2 select-none text-center ${
+            isGolden
+              ? 'bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 text-slate-950 font-black'
+              : 'bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white font-black'
+          }`}
+        >
+          <span
+            className={`text-3xl sm:text-4xl font-black tracking-widest ${
+              isGolden ? 'text-slate-950 drop-shadow-xs' : 'text-amber-400'
+            }`}
+          >
+            {initials}
+          </span>
+          <span
+            className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full line-clamp-1 border ${
+              isGolden
+                ? 'bg-slate-950 text-amber-300 border-amber-300/40'
+                : 'bg-slate-800 text-amber-200 border-slate-700'
+            }`}
+          >
+            {friend.banglaName || friend.name}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const FriendsSection: React.FC<FriendsSectionProps> = ({
   onOpenAddFriend,
   friendsList,
@@ -163,23 +228,7 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
                   {/* Card Top: Photo & Badges */}
                   <div className="p-4 sm:p-5 pb-0 flex flex-col items-center">
                     <div className="relative mb-3">
-                      <div
-                        className={`w-32 h-32 rounded-2xl overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 ${
-                          isGolden
-                            ? 'border-4 border-slate-900 bg-amber-200 ring-2 ring-amber-400'
-                            : 'border-3 border-slate-900 bg-amber-50'
-                        }`}
-                      >
-                        <img
-                          src={friend.photoUrl}
-                          alt={friend.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(friend.name)}`;
-                          }}
-                        />
-                      </div>
+                      <FriendCardPhoto friend={friend} isGolden={isGolden} />
 
                       {/* Emoji badge */}
                       <div

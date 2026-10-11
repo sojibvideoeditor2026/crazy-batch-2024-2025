@@ -27,13 +27,16 @@ export const AddFriendModal: React.FC<AddFriendModalProps> = ({
     e.preventDefault();
     if (!name.trim()) return;
 
+    const generatedSlug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `friend-${Date.now()}`;
+
     const newFriend: Friend = {
       id: 'friend-' + Date.now(),
+      slug: generatedSlug,
       name: name.trim(),
       banglaName: banglaName.trim() || name.trim(),
       role: role.trim() || 'পাগলা মেম্বার 🤪',
       funnyLine: funnyLine.trim() || 'ইনি নতুন যোগ দিয়েছেন, কিন্তু পাগলামিতে কারও চেয়ে কম যান না!',
-      photoUrl: photoUrl.trim() || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(name)}`,
+      photoUrl: photoUrl.trim() || `${import.meta.env.BASE_URL}photos/${generatedSlug}.jpg`,
       badgeEmoji: badgeEmoji || '🌟',
       cardColor: 'from-amber-100 to-yellow-100 border-yellow-300',
       tags: ['নতুন পাগল', 'ব্যাচমেট'],
