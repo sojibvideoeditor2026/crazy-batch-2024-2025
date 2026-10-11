@@ -467,7 +467,7 @@ export const CR_DATA: CRInfo = {
   title: "আমাদের শ্রদ্ধেয় সিআর ও সুপ্রিম কমান্ডার 👑",
   caption: "যেকোনো কাজে উনিই সবার আগে এবং প্রিন্সিপাল স্যারের ডান হাত! 📜✨",
   details: "অ্যাসাইনমেন্ট জমা দেওয়া, ক্লাস ক্যান্সেল করানো, বা স্যারের মেজাজ বুঝে ট্যুরের অনুমতি বের করে আনা—সবখানে সিআর আপুই একচ্ছত্র অভিভাবক!",
-  photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+  photoUrl: `${import.meta.env.BASE_URL}photos/aporupa-mondol.jpg`,
   stats: [
     { label: "কাজে সবার আগে", value: "১ম স্থান 🥇" },
     { label: "প্রিন্সিপাল স্যারের ভরসা", value: "১০০% 🌟" },

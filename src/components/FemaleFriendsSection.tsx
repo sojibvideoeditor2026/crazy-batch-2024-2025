@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
-import { Camera, Search, Sparkles, UserCheck } from 'lucide-react';
-import { FemaleFriend } from '../data/femaleFriends';
-import { PhotoUploadModal } from './PhotoUploadModal';
-import { playSound } from '../utils/sound';
+import { Search } from 'lucide-react';
+import { FemaleFriend, DEFAULT_FEMALE_AVATAR } from '../data/femaleFriends';
 
 interface FemaleFriendsSectionProps {
   femaleFriendsList: FemaleFriend[];
-  onUpdatePhoto: (id: string, newPhoto: string) => void;
 }
 
 export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
   femaleFriendsList,
-  onUpdatePhoto,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activePhotoFriend, setActivePhotoFriend] = useState<FemaleFriend | null>(null);
 
   const filteredList = femaleFriendsList.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -30,7 +25,7 @@ export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
             ইসলামের ইতিহাস ও সংস্কৃতি
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            বান্ধবী বাহিনী 👩🎓
+            বান্ধবী বাহিনী 👩‍🎓
           </h2>
           <p className="mt-3 text-zinc-400 font-medium text-sm sm:text-base">
             আমাদের ব্যাসের সম্মানিত সহপাঠী ও বান্ধবীগণ ({femaleFriendsList.length} জন)
@@ -50,6 +45,7 @@ export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
             />
             {searchQuery && (
               <button
+                type="button"
                 onClick={() => setSearchQuery('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-500 hover:text-zinc-300"
               >
@@ -70,34 +66,25 @@ export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
             {filteredList.map((friend) => (
               <div
                 key={friend.id}
-                className="bg-black/80 hover:bg-black rounded-2xl border-2 border-zinc-800 hover:border-zinc-500 p-4 transition-all duration-300 flex flex-col items-center group shadow-md hover:shadow-xl hover:-translate-y-1"
+                className="bg-black/90 hover:bg-black rounded-2xl border-2 border-zinc-800 hover:border-zinc-600 p-4 transition-all duration-300 flex flex-col items-center group shadow-md hover:shadow-xl hover:-translate-y-1"
               >
                 {/* Photo Placeholder & Avatar Frame */}
                 <div className="relative mb-3.5">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-zinc-900 border-2 border-zinc-700 group-hover:border-zinc-400 transition-colors">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-zinc-900 border-2 border-zinc-700 group-hover:border-zinc-500 transition-colors flex items-center justify-center">
                     <img
-                      src={friend.photoUrl}
+                      src={DEFAULT_FEMALE_AVATAR}
                       alt={friend.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(friend.name)}`;
+                        // Fallback initials if static image fails
+                        const initials = friend.name.split(' ').map(n => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || '👧';
+                        const parent = (e.target as HTMLElement).parentElement;
+                        if (parent) {
+                          parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-200 font-bold text-xl select-none">${initials}</div>`;
+                        }
                       }}
                     />
                   </div>
-
-                  {/* Change Photo Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSound('pop');
-                      setActivePhotoFriend(friend);
-                    }}
-                    className="absolute -bottom-1 -right-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-1.5 rounded-xl border border-zinc-600 shadow-md text-xs flex items-center justify-center transition-transform active:scale-90"
-                    title="ছবি পরিবর্তন"
-                  >
-                    <Camera className="w-3.5 h-3.5" />
-                  </button>
                 </div>
 
                 {/* Name Only (White text, pure & clean) */}
@@ -111,17 +98,6 @@ export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
           </div>
         )}
       </div>
-
-      {/* Photo Upload Modal */}
-      {activePhotoFriend && (
-        <PhotoUploadModal
-          isOpen={!!activePhotoFriend}
-          onClose={() => setActivePhotoFriend(null)}
-          personName={activePhotoFriend.name}
-          currentPhoto={activePhotoFriend.photoUrl}
-          onSavePhoto={(newUrl) => onUpdatePhoto(activePhotoFriend.id, newUrl)}
-        />
-      )}
     </section>
   );
 };

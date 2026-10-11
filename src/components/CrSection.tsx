@@ -19,6 +19,17 @@ export const CrSection: React.FC = () => {
     return CR_DATA;
   });
 
+  const [imgSrc, setImgSrc] = useState<string>(
+    crData.photoUrl || `${import.meta.env.BASE_URL}photos/aporupa-mondol.jpg`
+  );
+  const [imgError, setImgError] = useState(false);
+
+  // Sync if crData changes
+  React.useEffect(() => {
+    setImgSrc(crData.photoUrl || `${import.meta.env.BASE_URL}photos/aporupa-mondol.jpg`);
+    setImgError(false);
+  }, [crData.photoUrl]);
+
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [respectCount, setRespectCount] = useState<number>(() => {
     const saved = safeGetItem('pagla_batch_cr_respect');
@@ -76,16 +87,26 @@ export const CrSection: React.FC = () => {
             {/* Photo Column */}
             <div className="flex flex-col items-center">
               <div className="relative group">
-                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 overflow-hidden shadow-comic bg-amber-200">
-                  <img
-                    src={crData.photoUrl}
-                    alt={crData.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
-                    }}
-                  />
+                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 overflow-hidden shadow-comic bg-gradient-to-br from-amber-200 to-yellow-300 flex items-center justify-center">
+                  {!imgError ? (
+                    <img
+                      src={imgSrc}
+                      alt={crData.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={() => {
+                        setImgError(true);
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-500 text-slate-950 font-black p-4 text-center select-none">
+                      <span className="text-5xl sm:text-6xl font-extrabold tracking-wider drop-shadow-sm">
+                        AM
+                      </span>
+                      <span className="mt-1 text-xs font-black bg-slate-900 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-200">
+                        Aporupa Mondol
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Crown overlay */}

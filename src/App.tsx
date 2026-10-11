@@ -170,7 +170,6 @@ export default function App() {
         {/* 6. Female Friends Section ("বান্ধবী বাহিনী 👩🎓") */}
         <FemaleFriendsSection
           femaleFriendsList={femaleFriendsList}
-          onUpdatePhoto={handleUpdatePhoto}
         />
 
         {/* 7. Explore Bangladesh Section ("বাংলাদেশ ঘুরে দেখি 🇧🇩 - ৬৪ জেলা") */}
