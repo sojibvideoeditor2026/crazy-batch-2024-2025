@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ArrowUp, Sparkles, Smile } from 'lucide-react';
+import { Heart, ArrowUp, Sparkles, Smile, Globe, ExternalLink } from 'lucide-react';
 import { playSound } from '../utils/sound';
 
 export const Footer: React.FC = () => {
@@ -11,6 +11,38 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-slate-900 text-white border-t-4 border-slate-950 py-12 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* College Official Info Card */}
+        <div className="bg-slate-800/90 rounded-2xl border-2 border-slate-700 p-4 sm:p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-white p-0.5 border-2 border-amber-400 shrink-0">
+              <img
+                src={`${import.meta.env.BASE_URL}college-logo.png`}
+                alt="টঙ্গী সরকারি কলেজ"
+                className="w-full h-full object-contain rounded-full"
+              />
+            </div>
+            <div>
+              <h4 className="text-base sm:text-lg font-black text-white">
+                টঙ্গী সরকারি কলেজ, গাজীপুর
+              </h4>
+              <p className="text-xs text-slate-300 font-medium">
+                Tongi Govt. College, Gazipur | ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="https://tgco.edu.bd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl font-black text-xs flex items-center gap-1.5 transition-colors shadow-sm shrink-0"
+          >
+            <Globe className="w-4 h-4" />
+            <span>অফিসিয়াল ওয়েবসাইট</span>
+            <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
+          </a>
+        </div>
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
           {/* Brand info */}
           <div className="text-center md:text-left space-y-2">
@@ -21,7 +53,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 font-medium">
-              ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ | ক্যাম্পাস ও ট্যুরের অন্তহীন আনন্দ
+              টঙ্গী সরকারি কলেজ | ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ | ক্যাম্পাস ও ট্যুরের অন্তহীন আনন্দ
             </p>
           </div>
 

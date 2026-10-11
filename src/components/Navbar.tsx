@@ -38,6 +38,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white rounded-xl sm:rounded-2xl border-2 border-slate-900 flex items-center justify-center text-xl sm:text-2xl shadow-comic group-hover:rotate-6 transition-transform shrink-0">
               🤪
             </div>
+            <img
+              src={`${import.meta.env.BASE_URL}college-logo.png`}
+              alt="টঙ্গী সরকারি কলেজ"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-contain p-0.5 border-2 border-slate-900 shadow-2xs shrink-0 bg-white"
+            />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 whitespace-nowrap">
                 <span className="font-black text-slate-900 text-base sm:text-lg tracking-tight whitespace-nowrap">
@@ -49,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
               </div>
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-800 -mt-0.5 flex items-center gap-1 whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse shrink-0"></span>
-                <span className="whitespace-nowrap">ইসলামের ইতিহাস ও সংস্কৃতি</span>
+                <span className="font-extrabold text-slate-900 whitespace-nowrap">টঙ্গী সরকারি কলেজ, গাজীপুর</span>
               </p>
             </div>
           </a>

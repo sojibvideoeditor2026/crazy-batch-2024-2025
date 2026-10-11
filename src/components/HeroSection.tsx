@@ -30,10 +30,27 @@ export const HeroSection: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        {/* College Logo & Name */}
+        <div className="mb-6 flex flex-col items-center">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-white p-1.5 border-4 border-slate-900 shadow-comic-lg mb-3 overflow-hidden hover:scale-105 transition-transform duration-300">
+            <img
+              src={`${import.meta.env.BASE_URL}college-logo.png`}
+              alt="টঙ্গী সরকারি কলেজ, গাজীপুর"
+              className="w-full h-full object-contain rounded-full"
+            />
+          </div>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            টঙ্গী সরকারি কলেজ, গাজীপুর
+          </h2>
+          <p className="text-xs sm:text-sm font-bold text-slate-600 font-sans tracking-wide">
+            Tongi Govt. College, Gazipur
+          </p>
+        </div>
+
         {/* Department Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500 border-2 border-slate-900 text-white font-bold text-xs sm:text-sm shadow-comic mb-6 hover:scale-105 transition-transform cursor-pointer">
           <span className="text-base">🕌</span>
-          <span>বিভাগ: ইসলামের ইতিহাস ও সংস্কৃতি</span>
+          <span>ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ</span>
           <span className="w-2 h-2 rounded-full bg-amber-300 animate-ping"></span>
         </div>
 
