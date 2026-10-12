@@ -10,6 +10,33 @@ export interface Teacher {
   specialBadge: string;
 }
 
+export interface SpecialMember {
+  id: string;
+  name: string;
+  role: string;
+  quoteOrLine: string;
+  photoUrl: string;
+  slug: string;
+  specialBadge: string;
+}
+
+/**
+ * ========================================================================
+ * 👉 ডিপার্টমেন্টের বিশেষ সদস্য (অফিসিয়াল কাজের দায়িত্বে):
+ * ========================================================================
+ */
+export const SPECIAL_MEMBERS: SpecialMember[] = [
+  {
+    id: "rojob-bhai",
+    slug: "rojob-bhai",
+    name: "রজব ভাই (Rojob Bhai)",
+    role: "ডিপার্টমেন্টের অফিসিয়াল কাজের দায়িত্বে",
+    quoteOrLine: "স্যারদের পরেই যাঁর কাছে যেকোনো বিষয়ে পরামর্শ পাওয়া যায়। ডিপার্টমেন্টের যেকোনো কাগজপত্রের কাজে যাঁর সহযোগিতা ছাড়া আমরা এক পা-ও চলতে পারি না। আমাদের পুরো ব্যাচের পক্ষ থেকে অনেক অনেক শ্রদ্ধা ও ভালোবাসা!",
+    photoUrl: `${import.meta.env.BASE_URL}photos/rojob-bhai.jpg`,
+    specialBadge: "আমাদের বিশেষ সদস্য 🌟",
+  },
+];
+
 /**
  * ========================================================================
  * 👉 আমাদের প্রিয় স্যারগণের তথ্য:

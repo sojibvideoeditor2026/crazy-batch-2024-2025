@@ -1,15 +1,96 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { GraduationCap, Sparkles, Heart, Award, HeartHandshake, Crown } from 'lucide-react';
-import { Teacher } from '../data/teachers';
+import confetti from 'canvas-confetti';
+import { Teacher, SpecialMember, SPECIAL_MEMBERS } from '../data/teachers';
 import { playSound } from '../utils/sound';
 
 interface TeachersSectionProps {
   teachersList: Teacher[];
+  specialMembersList?: SpecialMember[];
   onUpdatePhoto?: (id: string, newPhoto: string) => void;
 }
 
 // Multi-extension sequential fallback (.jpg -> .jpeg -> .png -> .webp -> initials placeholder)
 const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+interface SpecialMemberCardPhotoProps {
+  member: SpecialMember;
+}
+
+const SpecialMemberCardPhoto: React.FC<SpecialMemberCardPhotoProps> = ({ member }) => {
+  const baseUrl = import.meta.env.BASE_URL;
+  const slug = member.slug;
+
+  const candidateUrls = useMemo(() => {
+    if (member.photoUrl && (member.photoUrl.startsWith('data:') || member.photoUrl.startsWith('blob:'))) {
+      return [member.photoUrl];
+    }
+
+    if (slug) {
+      const urls: string[] = [];
+      EXTENSIONS.forEach((ext) => urls.push(`${baseUrl}photos/${slug}${ext}`));
+      EXTENSIONS.forEach((ext) => urls.push(`${baseUrl}${slug}${ext}`));
+      return urls;
+    }
+
+    if (member.photoUrl) {
+      const matched = member.photoUrl.match(/^(.*)\.(jpg|jpeg|png|webp)$/i);
+      if (matched) {
+        return EXTENSIONS.map((ext) => `${matched[1]}${ext}`);
+      }
+      return [member.photoUrl];
+    }
+
+    return [];
+  }, [slug, member.photoUrl, baseUrl]);
+
+  const [attemptIndex, setAttemptIndex] = useState(0);
+
+  useEffect(() => {
+    setAttemptIndex(0);
+  }, [candidateUrls]);
+
+  const currentSrc = attemptIndex < candidateUrls.length ? candidateUrls[attemptIndex] : null;
+
+  const handleImageError = () => {
+    setAttemptIndex((prev) => prev + 1);
+  };
+
+  const getInitials = (name: string) => {
+    const bracketMatch = name.match(/\(([^)]+)\)/);
+    if (bracketMatch) {
+      const parts = bracketMatch[1].trim().split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    }
+    return 'RB';
+  };
+
+  const initials = getInitials(member.name);
+
+  return (
+    <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl border-4 border-slate-900 bg-teal-100 ring-4 ring-teal-300/80 overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 flex items-center justify-center">
+      {currentSrc ? (
+        <img
+          key={currentSrc}
+          src={currentSrc}
+          alt={member.name}
+          className="w-full h-full object-cover"
+          onError={handleImageError}
+        />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center p-3 select-none text-center bg-gradient-to-br from-teal-900 via-slate-900 to-cyan-950 text-white font-black">
+          <span className="font-black text-4xl text-teal-300 tracking-widest drop-shadow-xs">
+            {initials}
+          </span>
+          <span className="mt-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full line-clamp-1 border bg-teal-950/90 text-teal-200 border-teal-500/50">
+            {member.name}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface TeacherCardPhotoProps {
   teacher: Teacher;
@@ -126,11 +207,26 @@ const TeacherCardPhoto: React.FC<TeacherCardPhotoProps> = ({
 
 export const TeachersSection: React.FC<TeachersSectionProps> = ({
   teachersList,
+  specialMembersList = SPECIAL_MEMBERS,
 }) => {
   const [respectCounts, setRespectCounts] = useState<{ [key: string]: number }>({});
 
   const handleRespect = (id: string) => {
     playSound('ding');
+    setRespectCounts((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  };
+
+  const handleSpecialMemberLove = (id: string) => {
+    playSound('pop');
+    confetti({
+      particleCount: 50,
+      spread: 70,
+      origin: { y: 0.75 },
+      colors: ['#0d9488', '#0284c7', '#f59e0b', '#10b981', '#ec4899'],
+    });
     setRespectCounts((prev) => ({
       ...prev,
       [id]: (prev[id] || 0) + 1,
@@ -314,6 +410,80 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
             );
           })}
         </div>
+
+        {/* 3. ডিপার্টমেন্টের বিশেষ সদস্য (Special Member / Office Responsibility) */}
+        {specialMembersList && specialMembersList.length > 0 && (
+          <div className="mt-14 max-w-2xl mx-auto">
+            {/* Divider Heading */}
+            <div className="flex items-center gap-3 mb-6 justify-center">
+              <div className="h-0.5 flex-1 bg-slate-900/20 max-w-[80px]" />
+              <span className="text-xs font-black uppercase text-teal-900 tracking-wider bg-teal-100 border-2 border-slate-900 px-3.5 py-1 rounded-full shadow-xs flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                ডিপার্টমেন্টের বিশেষ সদস্য
+              </span>
+              <div className="h-0.5 flex-1 bg-slate-900/20 max-w-[80px]" />
+            </div>
+
+            {specialMembersList.map((member) => {
+              const respect = respectCounts[member.id] || 0;
+              return (
+                <div
+                  key={member.id}
+                  className="rounded-3xl bg-gradient-to-b from-teal-50 via-sky-50/60 to-slate-50 border-4 border-slate-900 shadow-comic-lg ring-4 ring-teal-300/70 overflow-hidden relative group hover:-translate-y-1.5 transition-all"
+                >
+                  {/* Top Ribbon */}
+                  <div className="bg-gradient-to-r from-teal-700 via-cyan-800 to-teal-700 text-white text-xs sm:text-sm font-black uppercase text-center py-2.5 px-4 border-b-3 border-slate-900 flex items-center justify-center gap-2 shadow-xs tracking-wide">
+                    <Sparkles className="w-4 h-4 text-amber-300 animate-pulse flex-shrink-0" />
+                    <span>{member.specialBadge}</span>
+                    <Sparkles className="w-4 h-4 text-amber-300 animate-pulse flex-shrink-0" />
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6 sm:p-9 flex flex-col items-center">
+                    {/* Photo with frame */}
+                    <div className="relative mb-5">
+                      <SpecialMemberCardPhoto member={member} />
+
+                      {/* Badge Icon */}
+                      <div className="absolute -top-3 -right-3 w-10 h-10 rounded-xl bg-amber-400 border-2 border-slate-900 flex items-center justify-center text-xl shadow-comic animate-wiggle">
+                        🌟
+                      </div>
+                    </div>
+
+                    {/* Name */}
+                    <h3 className="font-black text-2xl sm:text-3xl text-slate-900 text-center tracking-tight">
+                      {member.name}
+                    </h3>
+
+                    {/* Designation / Role */}
+                    <p className="mt-2 text-xs sm:text-sm font-black text-teal-900 bg-teal-100/90 border-2 border-teal-400/80 rounded-xl px-4 py-1.5 text-center shadow-xs">
+                      {member.role}
+                    </p>
+
+                    {/* Respectful & Warm Message */}
+                    <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-white/95 border-2 border-teal-200/90 text-slate-800 font-semibold text-center text-xs sm:text-sm leading-relaxed shadow-xs max-w-lg mx-auto">
+                      &ldquo;{member.quoteOrLine}&rdquo;
+                    </div>
+
+                    {/* Bottom Action: শ্রদ্ধা ও ভালোবাসা 💛 */}
+                    <div className="mt-6 pt-4 border-t-2 border-slate-200/80 w-full flex items-center justify-center max-w-lg">
+                      <button
+                        type="button"
+                        onClick={() => handleSpecialMemberLove(member.id)}
+                        className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-black shadow-comic active:translate-y-0.5 flex items-center gap-2 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 border-2 border-slate-900 transition-all hover:scale-105 cursor-pointer"
+                      >
+                        <HeartHandshake className="w-4 h-4 text-slate-950 fill-amber-500" />
+                        <span>
+                          শ্রদ্ধা ও ভালোবাসা 💛 {respect > 0 ? `(${respect})` : ''}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Bottom Banner */}
         <div className="mt-12 text-center">
