@@ -137,6 +137,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
               বান্ধবী বাহিনী
             </a>
             <a
+              href="#islamic-spain"
+              className="px-2.5 py-1 rounded-lg hover:bg-white text-amber-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95 flex items-center gap-1"
+            >
+              <span>স্পেন ও ইতিহাস 🕌</span>
+            </a>
+            <a
+              href="#prophet-seerah"
+              className="px-2.5 py-1 rounded-lg hover:bg-white text-emerald-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95 flex items-center gap-1 bg-emerald-100/50"
+            >
+              <span>নবীজির জীবনী ﷺ 🕌</span>
+            </a>
+            <a
+              href="#ict-guide"
+              className="px-2.5 py-1 rounded-lg hover:bg-white text-sky-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95 flex items-center gap-1"
+            >
+              <span>আইসিটি ভয় দূর 💻</span>
+            </a>
+            <a
               href="#explore-bangladesh"
               className="px-2.5 py-1 rounded-lg hover:bg-white text-emerald-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95"
             >

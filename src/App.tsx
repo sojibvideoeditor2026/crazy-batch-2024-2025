@@ -11,6 +11,9 @@ import { TeachersSection } from './components/TeachersSection';
 import { CrSection } from './components/CrSection';
 import { FriendsSection } from './components/FriendsSection';
 import { FemaleFriendsSection } from './components/FemaleFriendsSection';
+import { IslamicSpainSection } from './components/IslamicSpainSection';
+import { ProphetSeerahSection } from './components/ProphetSeerahSection';
+import { IctFearRemoverSection } from './components/IctFearRemoverSection';
 import { ExploreBangladeshSection } from './components/ExploreBangladeshSection';
 import { Footer } from './components/Footer';
 import { AddFriendModal } from './components/AddFriendModal';
@@ -172,7 +175,16 @@ export default function App() {
           femaleFriendsList={femaleFriendsList}
         />
 
-        {/* 7. Explore Bangladesh Section ("বাংলাদেশ ঘুরে দেখি 🇧🇩 - ৬৪ জেলা") */}
+        {/* 7. Islamic Spain Section ("ইসলামের ইতিহাস ও স্পেন 🕌") */}
+        <IslamicSpainSection />
+
+        {/* 8. Prophet's Seerah Section ("প্রিয় নবী ﷺ-এর পবিত্র জীবনী 🕌") */}
+        <ProphetSeerahSection />
+
+        {/* 9. ICT Fear Remover Section ("আইসিটি ভয় দূর করি 💻") */}
+        <IctFearRemoverSection />
+
+        {/* 10. Explore Bangladesh Section ("বাংলাদেশ ঘুরে দেখি 🇧🇩 - ৬৪ জেলা") */}
         <ExploreBangladeshSection />
       </main>
 
