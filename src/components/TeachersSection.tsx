@@ -1,19 +1,129 @@
-import React, { useState } from 'react';
-import { GraduationCap, Camera, Sparkles, Heart, Award, HeartHandshake, Crown } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { GraduationCap, Sparkles, Heart, Award, HeartHandshake, Crown } from 'lucide-react';
 import { Teacher } from '../data/teachers';
-import { PhotoUploadModal } from './PhotoUploadModal';
 import { playSound } from '../utils/sound';
 
 interface TeachersSectionProps {
   teachersList: Teacher[];
-  onUpdatePhoto: (id: string, newPhoto: string) => void;
+  onUpdatePhoto?: (id: string, newPhoto: string) => void;
 }
+
+// Multi-extension sequential fallback (.jpg -> .jpeg -> .png -> .webp -> initials placeholder)
+const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+interface TeacherCardPhotoProps {
+  teacher: Teacher;
+  isHead?: boolean;
+  isSpecial?: boolean;
+}
+
+const TeacherCardPhoto: React.FC<TeacherCardPhotoProps> = ({
+  teacher,
+  isHead,
+  isSpecial,
+}) => {
+  const baseUrl = import.meta.env.BASE_URL;
+  const slug = teacher.slug;
+
+  const candidateUrls = useMemo(() => {
+    // If a custom uploaded image (data: or blob:) is present, prioritize it
+    if (teacher.photoUrl && (teacher.photoUrl.startsWith('data:') || teacher.photoUrl.startsWith('blob:'))) {
+      return [teacher.photoUrl];
+    }
+
+    if (slug) {
+      return EXTENSIONS.map((ext) => `${baseUrl}photos/${slug}${ext}`);
+    }
+
+    if (teacher.photoUrl) {
+      const matched = teacher.photoUrl.match(/^(.*)\.(jpg|jpeg|png|webp)$/i);
+      if (matched) {
+        return EXTENSIONS.map((ext) => `${matched[1]}${ext}`);
+      }
+      return [teacher.photoUrl];
+    }
+
+    return [];
+  }, [slug, teacher.photoUrl, baseUrl]);
+
+  const [attemptIndex, setAttemptIndex] = useState(0);
+
+  useEffect(() => {
+    setAttemptIndex(0);
+  }, [candidateUrls]);
+
+  const currentSrc = attemptIndex < candidateUrls.length ? candidateUrls[attemptIndex] : null;
+
+  const handleImageError = () => {
+    // Move to next candidate extension (.jpg -> .jpeg -> .png -> .webp)
+    setAttemptIndex((prev) => prev + 1);
+  };
+
+  const getInitials = (name: string) => {
+    const clean = name.replace(/^(Prof\.|Dr\.|Sir|MD\.|Md\.)\s*/gi, '').trim();
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return 'TR';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const initials = getInitials(teacher.name);
+
+  const containerClasses = isHead
+    ? 'w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 bg-amber-200 ring-4 ring-amber-400/80 overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 flex items-center justify-center'
+    : isSpecial
+    ? 'w-44 h-44 sm:w-48 sm:h-48 rounded-3xl border-4 border-slate-900 bg-amber-200 ring-2 ring-amber-400 overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 flex items-center justify-center'
+    : 'w-36 h-36 sm:w-40 sm:h-40 rounded-3xl border-3 border-slate-900 bg-slate-900 overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 flex items-center justify-center';
+
+  return (
+    <div className={containerClasses}>
+      {currentSrc ? (
+        <img
+          key={currentSrc}
+          src={currentSrc}
+          alt={teacher.name}
+          className="w-full h-full object-cover"
+          onError={handleImageError}
+        />
+      ) : (
+        <div
+          className={`w-full h-full flex flex-col items-center justify-center p-3 select-none text-center ${
+            isHead
+              ? 'bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black'
+              : isSpecial
+              ? 'bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 text-slate-950 font-black'
+              : 'bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 text-white font-black'
+          }`}
+        >
+          <span
+            className={`font-black tracking-widest ${
+              isHead
+                ? 'text-4xl sm:text-5xl text-slate-950 drop-shadow-xs'
+                : isSpecial
+                ? 'text-4xl text-slate-950'
+                : 'text-3xl text-amber-400'
+            }`}
+          >
+            {initials}
+          </span>
+          <span
+            className={`mt-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full line-clamp-1 border ${
+              isHead || isSpecial
+                ? 'bg-slate-950 text-amber-300 border-amber-300/40'
+                : 'bg-slate-800 text-amber-200 border-slate-700'
+            }`}
+          >
+            {teacher.name}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const TeachersSection: React.FC<TeachersSectionProps> = ({
   teachersList,
-  onUpdatePhoto,
 }) => {
-  const [activePhotoTeacher, setActivePhotoTeacher] = useState<Teacher | null>(null);
   const [respectCounts, setRespectCounts] = useState<{ [key: string]: number }>({});
 
   const handleRespect = (id: string) => {
@@ -22,11 +132,6 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
       ...prev,
       [id]: (prev[id] || 0) + 1,
     }));
-  };
-
-  const getFallbackPlaceholder = (name: string, isHead = false) => {
-    const bg = isHead ? 'b45309,d97706' : '1e293b,334155';
-    return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=${bg}&textColor=ffffff&fontSize=42&fontWeight=700`;
   };
 
   const headTeacher = teachersList.find((t) => t.isHeadOfDepartment);
@@ -64,36 +169,15 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
               <div className="p-6 sm:p-10 flex flex-col items-center">
                 {/* Photo Frame */}
                 <div className="relative mb-6">
-                  <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 bg-amber-200 ring-4 ring-amber-400/80 overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200">
-                    <img
-                      src={headTeacher.photoUrl}
-                      alt={headTeacher.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = getFallbackPlaceholder(headTeacher.name, true);
-                      }}
-                    />
-                  </div>
+                  <TeacherCardPhoto
+                    teacher={headTeacher}
+                    isHead={true}
+                  />
 
                   {/* Golden Badge Icon */}
                   <div className="absolute -top-3 -right-3 w-12 h-12 rounded-2xl bg-amber-400 border-2 border-slate-900 flex items-center justify-center text-2xl shadow-comic animate-wiggle">
                     👑
                   </div>
-
-                  {/* Change/Add Photo Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSound('pop');
-                      setActivePhotoTeacher(headTeacher);
-                    }}
-                    className="absolute -bottom-2.5 -right-2.5 bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-xl border-2 border-white shadow-comic text-xs flex items-center gap-1.5 active:scale-95 transition-transform"
-                    title="বিভাগীয় প্রধান স্যারের ছবি দিন বা পরিবর্তন করুন"
-                  >
-                    <Camera className="w-3.5 h-3.5 text-amber-300" />
-                    <span className="text-xs font-bold">ছবি দিন</span>
-                  </button>
                 </div>
 
                 {/* Name */}
@@ -111,26 +195,15 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
                   &ldquo;{headTeacher.quoteOrLine}&rdquo;
                 </div>
 
-                {/* Actions */}
-                <div className="mt-6 pt-4 border-t-2 border-amber-300/80 w-full flex items-center justify-between max-w-xl">
+                {/* Actions: শ্রদ্ধা ও সালাম */}
+                <div className="mt-6 pt-4 border-t-2 border-amber-300/80 w-full flex items-center justify-center max-w-xl">
                   <button
                     type="button"
                     onClick={() => handleRespect(headTeacher.id)}
-                    className="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black shadow-comic active:translate-y-0.5 flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 border-2 border-slate-900 transition-all"
+                    className="px-6 py-2.5 rounded-xl text-xs sm:text-sm font-black shadow-comic active:translate-y-0.5 flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 border-2 border-slate-900 transition-all hover:scale-105"
                   >
                     <HeartHandshake className="w-4 h-4 text-slate-950" />
                     <span>শ্রদ্ধা ও সালাম {respectCounts[headTeacher.id] ? `(${respectCounts[headTeacher.id]})` : ''}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSound('pop');
-                      setActivePhotoTeacher(headTeacher);
-                    }}
-                    className="text-xs sm:text-sm font-bold text-amber-900 hover:text-black underline"
-                  >
-                    ছবি পরিবর্তন
                   </button>
                 </div>
               </div>
@@ -176,23 +249,10 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
                 <div className="p-6 sm:p-8 pb-2 flex flex-col items-center">
                   {/* Photo with Frame */}
                   <div className="relative mb-5">
-                    <div
-                      className={`overflow-hidden shadow-comic group-hover:scale-105 transition-transform duration-200 rounded-3xl ${
-                        isSpecial
-                          ? 'w-44 h-44 sm:w-48 sm:h-48 border-4 border-slate-900 bg-amber-200 ring-2 ring-amber-400'
-                          : 'w-36 h-36 sm:w-40 sm:h-40 border-3 border-slate-900 bg-slate-100'
-                      }`}
-                    >
-                      <img
-                        src={teacher.photoUrl}
-                        alt={teacher.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = getFallbackPlaceholder(teacher.name, isSpecial);
-                        }}
-                      />
-                    </div>
+                    <TeacherCardPhoto
+                      teacher={teacher}
+                      isSpecial={isSpecial}
+                    />
 
                     {/* Cap Icon badge */}
                     <div
@@ -202,20 +262,6 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
                     >
                       🎓
                     </div>
-
-                    {/* Change Photo Button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSound('pop');
-                        setActivePhotoTeacher(teacher);
-                      }}
-                      className="absolute -bottom-2 -right-2 bg-slate-900 hover:bg-slate-800 text-white p-2 rounded-xl border-2 border-white shadow-comic text-xs flex items-center gap-1 active:scale-95 transition-transform"
-                      title="স্যারের ছবি দিন বা পরিবর্তন করুন"
-                    >
-                      <Camera className="w-3.5 h-3.5 text-amber-300" />
-                      <span className="text-[10px] font-bold">ছবি দিন</span>
-                    </button>
                   </div>
 
                   {/* Name */}
@@ -246,11 +292,11 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
                   </div>
 
                   {/* Bottom Action: Respect / সালাম */}
-                  <div className="pt-4 border-t-2 border-slate-100 flex items-center justify-between">
+                  <div className="pt-4 border-t-2 border-slate-100 flex items-center justify-center">
                     <button
                       type="button"
                       onClick={() => handleRespect(teacher.id)}
-                      className={`px-4 py-2 rounded-xl text-xs font-black shadow-xs active:translate-y-0.5 flex items-center gap-1.5 transition-all ${
+                      className={`w-full justify-center px-4 py-2.5 rounded-xl text-xs font-black shadow-xs active:translate-y-0.5 flex items-center gap-1.5 transition-all hover:scale-102 ${
                         isSpecial
                           ? 'bg-amber-400 hover:bg-amber-300 text-slate-950 border-2 border-slate-900'
                           : 'bg-slate-900 hover:bg-slate-800 text-amber-300 border-2 border-slate-900'
@@ -258,17 +304,6 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
                     >
                       <HeartHandshake className="w-4 h-4" />
                       <span>শ্রদ্ধা ও সালাম {respect > 0 ? `(${respect})` : ''}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSound('pop');
-                        setActivePhotoTeacher(teacher);
-                      }}
-                      className="text-xs font-bold text-amber-700 hover:text-amber-900 underline"
-                    >
-                      ছবি পরিবর্তন
                     </button>
                   </div>
                 </div>
@@ -289,17 +324,6 @@ export const TeachersSection: React.FC<TeachersSectionProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Photo Upload Modal for selected teacher */}
-      {activePhotoTeacher && (
-        <PhotoUploadModal
-          isOpen={!!activePhotoTeacher}
-          onClose={() => setActivePhotoTeacher(null)}
-          personName={activePhotoTeacher.name}
-          currentPhoto={activePhotoTeacher.photoUrl}
-          onSavePhoto={(newUrl) => onUpdatePhoto(activePhotoTeacher.id, newUrl)}
-        />
-      )}
     </section>
   );
 };

@@ -11,6 +11,7 @@ import { TeachersSection } from './components/TeachersSection';
 import { CrSection } from './components/CrSection';
 import { FriendsSection } from './components/FriendsSection';
 import { FemaleFriendsSection } from './components/FemaleFriendsSection';
+import { PhotoGallerySection } from './components/PhotoGallerySection';
 import { IslamicSpainSection } from './components/IslamicSpainSection';
 import { ProphetSeerahSection } from './components/ProphetSeerahSection';
 import { IctFearRemoverSection } from './components/IctFearRemoverSection';
@@ -174,6 +175,9 @@ export default function App() {
         <FemaleFriendsSection
           femaleFriendsList={femaleFriendsList}
         />
+
+        {/* 6.5 Photo Gallery Section ("ফটো গ্যালারি 📸") */}
+        <PhotoGallerySection />
 
         {/* 7. Islamic Spain Section ("ইসলামের ইতিহাস ও স্পেন 🕌") */}
         <IslamicSpainSection />

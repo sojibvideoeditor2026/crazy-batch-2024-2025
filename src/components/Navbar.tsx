@@ -137,6 +137,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
               বান্ধবী বাহিনী
             </a>
             <a
+              href="#gallery"
+              className="px-2.5 py-1 rounded-lg hover:bg-white text-purple-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95 flex items-center gap-1 bg-purple-100/60"
+            >
+              <span>ফটো গ্যালারি 📸</span>
+            </a>
+            <a
               href="#islamic-spain"
               className="px-2.5 py-1 rounded-lg hover:bg-white text-amber-950 font-black transition-colors whitespace-nowrap shrink-0 active:scale-95 flex items-center gap-1"
             >
