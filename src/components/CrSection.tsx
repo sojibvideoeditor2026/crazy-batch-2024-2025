@@ -19,16 +19,24 @@ export const CrSection: React.FC = () => {
     return CR_DATA;
   });
 
-  const [imgSrc, setImgSrc] = useState<string>(
-    crData.photoUrl || `${import.meta.env.BASE_URL}photos/aporupa-mondol.jpg`
-  );
-  const [imgError, setImgError] = useState(false);
+  const CR_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+  const candidatePhotos = React.useMemo(() => {
+    if (crData.photoUrl && (crData.photoUrl.startsWith('data:') || crData.photoUrl.startsWith('blob:'))) {
+      return [crData.photoUrl];
+    }
+    const baseUrl = import.meta.env.BASE_URL;
+    return CR_EXTENSIONS.map((ext) => `${baseUrl}photos/aporupa-mondol${ext}`);
+  }, [crData.photoUrl]);
+
+  const [attemptIndex, setAttemptIndex] = useState(0);
 
   // Sync if crData changes
   React.useEffect(() => {
-    setImgSrc(crData.photoUrl || `${import.meta.env.BASE_URL}photos/aporupa-mondol.jpg`);
-    setImgError(false);
-  }, [crData.photoUrl]);
+    setAttemptIndex(0);
+  }, [candidatePhotos]);
+
+  const currentCrPhoto = attemptIndex < candidatePhotos.length ? candidatePhotos[attemptIndex] : null;
 
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [respectCount, setRespectCount] = useState<number>(() => {
@@ -88,13 +96,14 @@ export const CrSection: React.FC = () => {
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 overflow-hidden shadow-comic bg-gradient-to-br from-amber-200 to-yellow-300 flex items-center justify-center">
-                  {!imgError ? (
+                  {currentCrPhoto ? (
                     <img
-                      src={imgSrc}
+                      key={currentCrPhoto}
+                      src={currentCrPhoto}
                       alt={crData.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={() => {
-                        setImgError(true);
+                        setAttemptIndex((prev) => prev + 1);
                       }}
                     />
                   ) : (

@@ -12,16 +12,55 @@ interface FriendsSectionProps {
   onResetDefault: () => void;
 }
 
-// Helper component for Friend card photo with initials fallback
+// Helper component for Friend card photo with multi-extension sequential fallback (.jpg -> .jpeg -> .png -> .webp -> initials placeholder)
+const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
 const FriendCardPhoto: React.FC<{
   friend: Friend;
   isGolden?: boolean;
 }> = ({ friend, isGolden }) => {
-  const [hasError, setHasError] = useState(false);
+  // If friend has an explicit custom URL (like blob:, data:, or external), try it directly
+  // Otherwise build candidate URLs from slug or photoUrl
+  const slug = friend.slug;
+  const baseUrl = import.meta.env.BASE_URL;
 
+  // Build the list of fallback image sources
+  const candidateUrls = React.useMemo(() => {
+    // If user uploaded a custom image (e.g. data: or blob:), prioritize that URL
+    if (friend.photoUrl && (friend.photoUrl.startsWith('data:') || friend.photoUrl.startsWith('blob:'))) {
+      return [friend.photoUrl];
+    }
+
+    if (slug) {
+      return EXTENSIONS.map((ext) => `${baseUrl}photos/${slug}${ext}`);
+    }
+
+    if (friend.photoUrl) {
+      // If photoUrl has a known extension, try replacing or trying the full extension list
+      const matched = friend.photoUrl.match(/^(.*)\.(jpg|jpeg|png|webp)$/i);
+      if (matched) {
+        const basePath = matched[1];
+        return EXTENSIONS.map((ext) => `${basePath}${ext}`);
+      }
+      return [friend.photoUrl];
+    }
+
+    return [];
+  }, [slug, friend.photoUrl, baseUrl]);
+
+  const [attemptIndex, setAttemptIndex] = useState(0);
+
+  // Reset when candidate URLs change (e.g. friend or photo update)
   useEffect(() => {
-    setHasError(false);
-  }, [friend.photoUrl]);
+    setAttemptIndex(0);
+  }, [candidateUrls]);
+
+  const currentSrc = attemptIndex < candidateUrls.length ? candidateUrls[attemptIndex] : null;
+
+  const handleImageError = () => {
+    // Move to next candidate extension (.jpg -> .jpeg -> .png -> .webp)
+    setAttemptIndex((prev) => prev + 1);
+  };
 
   // Extract clean 2-letter initials
   const getInitials = (fullName: string) => {
@@ -40,12 +79,13 @@ const FriendCardPhoto: React.FC<{
           : 'border-3 border-slate-900 bg-slate-900'
       }`}
     >
-      {!hasError && friend.photoUrl ? (
+      {currentSrc ? (
         <img
-          src={friend.photoUrl}
+          key={currentSrc}
+          src={currentSrc}
           alt={friend.name}
           className="w-full h-full object-cover"
-          onError={() => setHasError(true)}
+          onError={handleImageError}
         />
       ) : (
         <div
