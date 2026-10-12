@@ -32,7 +32,10 @@ const TeacherCardPhoto: React.FC<TeacherCardPhotoProps> = ({
     }
 
     if (slug) {
-      return EXTENSIONS.map((ext) => `${baseUrl}photos/${slug}${ext}`);
+      const urls: string[] = [];
+      EXTENSIONS.forEach((ext) => urls.push(`${baseUrl}photos/${slug}${ext}`));
+      EXTENSIONS.forEach((ext) => urls.push(`${baseUrl}${slug}${ext}`));
+      return urls;
     }
 
     if (teacher.photoUrl) {

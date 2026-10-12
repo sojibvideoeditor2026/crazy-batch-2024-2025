@@ -188,7 +188,7 @@ export default function App() {
         {/* 9. ICT Fear Remover Section ("আইসিটি ভয় দূর করি 💻") */}
         <IctFearRemoverSection />
 
-        {/* 10. Explore Bangladesh Section ("বাংলাদেশ ঘুরে দেখি 🇧🇩 - ৬৪ জেলা") */}
+        {/* 10. Explore Bangladesh Section ("বাংলাদেশ ঘুরে দেখি 🇧🇩 - জনপ্রিয় ভ্রমণ গন্তব্য") */}
         <ExploreBangladeshSection />
       </main>
 

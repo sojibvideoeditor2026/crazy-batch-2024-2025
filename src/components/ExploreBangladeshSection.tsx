@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Compass, Plane, Check, Sparkles, Bookmark } from 'lucide-react';
+import { Search, Calendar, Compass, Plane, Check, Sparkles, Bookmark, Users } from 'lucide-react';
 import { DISTRICTS_DATA, District, DIVISIONS } from '../data/districts';
 import { DistrictDetailModal } from './DistrictDetailModal';
 import { playSound } from '../utils/sound';
 import { safeGetItem, safeSetItem } from '../utils/storage';
 
 export const ExploreBangladeshSection: React.FC = () => {
-  const [selectedDivision, setSelectedDivision] = useState<string>('সব জেলা');
+  const [selectedDivision, setSelectedDivision] = useState<string>('সব গন্তব্য');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
   const [showOnlyWishlist, setShowOnlyWishlist] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export const ExploreBangladeshSection: React.FC = () => {
         return [];
       }
     }
-    return ['coxs-bazar', 'sylhet', 'bandarban']; // Default favorite starting ideas
+    return ['coxs-bazar', 'sylhet', 'bandarban', 'sajek']; // Default favorite starting ideas
   });
 
   const toggleWishlist = (id: string) => {
@@ -37,12 +37,18 @@ export const ExploreBangladeshSection: React.FC = () => {
   // Filter districts
   const filteredDistricts = DISTRICTS_DATA.filter((district) => {
     const matchesDivision =
-      selectedDivision === 'সব জেলা' || district.division === selectedDivision;
+      selectedDivision === 'সব গন্তব্য' || district.division === selectedDivision;
 
+    const query = searchQuery.trim().toLowerCase();
     const matchesSearch =
-      district.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      district.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      district.spots.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+      !query ||
+      district.name.toLowerCase().includes(query) ||
+      district.nameEn.toLowerCase().includes(query) ||
+      district.spots.some((s) => s.toLowerCase().includes(query)) ||
+      (district.ethnicGroupInfo?.communityNames &&
+        district.ethnicGroupInfo.communityNames.some((c) => c.toLowerCase().includes(query))) ||
+      (district.ethnicGroupInfo?.festivals &&
+        district.ethnicGroupInfo.festivals.some((f) => f.toLowerCase().includes(query)));
 
     const matchesWishlist = !showOnlyWishlist || wishlist.includes(district.id);
 
@@ -56,13 +62,13 @@ export const ExploreBangladeshSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500 border-2 border-slate-900 text-white font-black text-xs uppercase shadow-comic mb-3 animate-pulse-pop">
             <Sparkles className="w-4 h-4 text-amber-200" />
-            <span>৬৪ জেলার ভ্রমণ গাইড ও ট্রিপ প্ল্যানার</span>
+            <span>জনপ্রিয় ভ্রমণ গন্তব্য ও ট্রিপ প্ল্যানার</span>
           </div>
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight">
             বাংলাদেশ ঘুরে দেখি 🇧🇩
           </h2>
           <p className="mt-3 text-slate-700 font-bold text-sm sm:text-base leading-relaxed">
-            পাগলা ব্যাসের পরবর্তী ট্যুর কোথায় হবে? আটটি বিভাগের ৬৪টি জেলার সেরা জায়গাগুলো দেখুন এবং ট্রিপ লিস্টে যুক্ত করুন!
+            পাগলা ব্যাচের পরবর্তী ট্যুর কোথায় হবে? ২০টি জনপ্রিয় ভ্রমণ জেলার সেরা জায়গা ও ক্ষুদ্র নৃগোষ্ঠীর ঐতিহ্য দেখুন এবং বন্ধুদের ট্রিপ লিস্টে যুক্ত করুন!
           </p>
         </div>
 
@@ -76,8 +82,8 @@ export const ExploreBangladeshSection: React.FC = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="জেলার নাম বা দর্শনীয় স্থান লিখে খুঁজুন..."
-                className="w-full pl-11 pr-4 py-2.5 text-sm border-2 border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 font-sans"
+                placeholder="জেলার নাম, স্থান বা ক্ষুদ্র নৃগোষ্ঠী লিখে খুঁজুন..."
+                className="w-full pl-11 pr-8 py-2.5 text-sm border-2 border-slate-300 rounded-xl focus:outline-none focus:border-amber-500 font-sans"
               />
               {searchQuery && (
                 <button
@@ -133,7 +139,7 @@ export const ExploreBangladeshSection: React.FC = () => {
 
         {/* Results Count Banner */}
         <div className="mb-6 flex items-center justify-between text-xs font-bold text-slate-600 px-2">
-          <span>মোট পাওয়া গেছে: <strong className="text-slate-900">{filteredDistricts.length}টি জেলা</strong></span>
+          <span>মোট পাওয়া গেছে: <strong className="text-slate-900">{filteredDistricts.length}টি ভ্রমণ গন্তব্য</strong></span>
           {showOnlyWishlist && (
             <span className="text-rose-600 font-black">★ শুধু বন্ধুদের পছন্দের ট্রিপ লিস্ট দেখানো হচ্ছে</span>
           )}
@@ -143,13 +149,14 @@ export const ExploreBangladeshSection: React.FC = () => {
         {filteredDistricts.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border-3 border-dashed border-slate-300">
             <p className="text-4xl mb-2">🗺️</p>
-            <p className="text-lg font-black text-slate-800">কোনো জেলা খুঁজে পাওয়া যায়নি!</p>
+            <p className="text-lg font-black text-slate-800">কোনো ভ্রমণ গন্তব্য খুঁজে পাওয়া যায়নি!</p>
             <p className="text-xs text-slate-500 mt-1">অনুসন্ধান বা ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredDistricts.map((district) => {
               const isWishlisted = wishlist.includes(district.id);
+              const ethnic = district.ethnicGroupInfo;
 
               return (
                 <div
@@ -180,13 +187,24 @@ export const ExploreBangladeshSection: React.FC = () => {
                       {district.shortDesc}
                     </p>
 
+                    {/* Ethnic Community Badge if present */}
+                    {ethnic && ethnic.hasEthnicCommunity && ethnic.communityNames.length > 0 && (
+                      <div className="mt-2.5 flex items-center gap-1.5 text-[11px] font-bold text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                        <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                        <span className="truncate">
+                          ক্ষুদ্র নৃগোষ্ঠী: {ethnic.communityNames.slice(0, 2).join(', ')}
+                          {ethnic.communityNames.length > 2 ? ` (+${ethnic.communityNames.length - 2})` : ''}
+                        </span>
+                      </div>
+                    )}
+
                     {/* Sights */}
                     <div className="mt-3">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1">
                         দেখার মতো জায়গা:
                       </span>
                       <div className="flex flex-wrap gap-1">
-                        {district.spots.map((spot, idx) => (
+                        {district.spots.slice(0, 3).map((spot, idx) => (
                           <span
                             key={idx}
                             className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200"
@@ -194,6 +212,11 @@ export const ExploreBangladeshSection: React.FC = () => {
                             📍 {spot}
                           </span>
                         ))}
+                        {district.spots.length > 3 && (
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500">
+                            +{district.spots.length - 3}টি
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -201,7 +224,7 @@ export const ExploreBangladeshSection: React.FC = () => {
                     <div className="mt-3 flex items-center gap-1.5 text-xs font-bold text-slate-700">
                       <Calendar className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                       <span className="text-[11px] text-slate-500">সেরা সময়:</span>
-                      <span className="text-[11px] font-extrabold text-slate-800">{district.bestTime}</span>
+                      <span className="text-[11px] font-extrabold text-slate-800 line-clamp-1">{district.bestTime}</span>
                     </div>
                   </div>
 
@@ -236,7 +259,7 @@ export const ExploreBangladeshSection: React.FC = () => {
                       {isWishlisted ? (
                         <>
                           <Check className="w-3.5 h-3.5" />
-                          <span className="text-[11px]">যোগ করা আছে</span>
+                          <span className="text-[11px]">যোগ করা</span>
                         </>
                       ) : (
                         <>
