@@ -4,7 +4,7 @@ import path from 'path';
 import {defineConfig} from 'vite';
 export default defineConfig(() => {
    return {
-    base: '/pagla-batch-2024-25/',
+    base: '/crazy-batch-2024-2025/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
