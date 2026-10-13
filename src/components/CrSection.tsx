@@ -1,55 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import confetti from 'canvas-confetti';
-import { Crown, Sparkles, Award, Camera, Heart, CheckCircle2, Shield } from 'lucide-react';
-import { CR_DATA, CRInfo } from '../data/friends';
+import { Crown, Sparkles, Award, CheckCircle2 } from 'lucide-react';
+import { CR_DATA } from '../data/friends';
 import { playSound } from '../utils/sound';
-import { PhotoUploadModal } from './PhotoUploadModal';
 import { safeSetItem, safeGetItem } from '../utils/storage';
 
+const CR_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
 export const CrSection: React.FC = () => {
-  const [crData, setCrData] = useState<CRInfo>(() => {
-    const saved = safeGetItem('pagla_batch_cr_data');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return CR_DATA;
-      }
-    }
-    return CR_DATA;
-  });
+  const crData = CR_DATA;
 
-  const CR_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
-
-  const candidatePhotos = React.useMemo(() => {
-    if (crData.photoUrl && (crData.photoUrl.startsWith('data:') || crData.photoUrl.startsWith('blob:'))) {
-      return [crData.photoUrl];
-    }
+  // Attempt sequentially: .jpg -> .jpeg -> .png -> .webp
+  const candidatePhotos = useMemo(() => {
     const baseUrl = import.meta.env.BASE_URL;
     return CR_EXTENSIONS.map((ext) => `${baseUrl}photos/aporupa-mondol${ext}`);
-  }, [crData.photoUrl]);
+  }, []);
 
   const [attemptIndex, setAttemptIndex] = useState(0);
 
-  // Sync if crData changes
-  React.useEffect(() => {
-    setAttemptIndex(0);
-  }, [candidatePhotos]);
-
   const currentCrPhoto = attemptIndex < candidatePhotos.length ? candidatePhotos[attemptIndex] : null;
 
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [respectCount, setRespectCount] = useState<number>(() => {
     const saved = safeGetItem('pagla_batch_cr_respect');
     return saved ? parseInt(saved, 10) : 99;
   });
   const [hasSaluted, setHasSaluted] = useState(false);
-
-  const handleSavePhoto = (newPhotoUrl: string) => {
-    const updated = { ...crData, photoUrl: newPhotoUrl };
-    setCrData(updated);
-    safeSetItem('pagla_batch_cr_data', JSON.stringify(updated));
-  };
 
   const handleSalute = () => {
     playSound('cheer');
@@ -86,61 +61,64 @@ export const CrSection: React.FC = () => {
         {/* Highlighted VIP Card for CR Aporupa Mondol */}
         <div className="bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100 rounded-3xl border-4 border-slate-900 p-6 sm:p-10 shadow-comic-lg relative overflow-hidden ring-4 ring-amber-300/60">
           {/* Top VIP ribbon */}
-          <div className="absolute -top-1 -right-1 bg-rose-500 text-white font-black text-xs sm:text-sm px-6 py-1.5 rounded-bl-2xl border-l-3 border-b-3 border-slate-900 shadow-comic flex items-center gap-1">
+          <div className="absolute -top-1 -right-1 bg-rose-500 text-white font-black text-xs sm:text-sm px-6 py-1.5 rounded-bl-2xl border-l-3 border-b-3 border-slate-900 shadow-comic flex items-center gap-1 z-20">
             <Award className="w-4 h-4 text-amber-200" />
             <span>অফিশিয়াল সিআর ২০২৪-২৫</span>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            {/* Photo Column */}
-            <div className="flex flex-col items-center">
+          <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-10">
+            {/* Photo Column - Large Photo with Golden Border & Rich Shadow */}
+            <div className="flex flex-col items-center shrink-0">
               <div className="relative group">
-                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-3xl border-4 border-slate-900 overflow-hidden shadow-comic bg-gradient-to-br from-amber-200 to-yellow-300 flex items-center justify-center">
-                  {currentCrPhoto ? (
-                    <img
-                      key={currentCrPhoto}
-                      src={currentCrPhoto}
-                      alt={crData.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={() => {
-                        setAttemptIndex((prev) => prev + 1);
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-500 text-slate-950 font-black p-4 text-center select-none">
-                      <span className="text-5xl sm:text-6xl font-extrabold tracking-wider drop-shadow-sm">
-                        AM
-                      </span>
-                      <span className="mt-1 text-xs font-black bg-slate-900 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-200">
-                        Aporupa Mondol
-                      </span>
-                    </div>
-                  )}
+                {/* Golden Border Frame */}
+                <div className="p-2 sm:p-2.5 bg-gradient-to-tr from-amber-500 via-amber-200 to-yellow-400 rounded-3xl sm:rounded-[2rem] shadow-2xl shadow-amber-900/30 ring-4 ring-amber-400/50 border-2 border-amber-600/50">
+                  <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-[1.3rem] sm:rounded-[1.6rem] overflow-hidden border-2 border-slate-900 bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300 flex items-center justify-center">
+                    {currentCrPhoto ? (
+                      <img
+                        key={currentCrPhoto}
+                        src={currentCrPhoto}
+                        alt={crData.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        onError={() => {
+                          setAttemptIndex((prev) => prev + 1);
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 text-slate-950 font-black p-6 text-center select-none shadow-inner">
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-slate-900/10 border-2 border-amber-600/30 flex items-center justify-center shadow-inner mb-2">
+                          <span className="text-5xl sm:text-6xl font-extrabold tracking-wider drop-shadow-sm font-serif">
+                            AM
+                          </span>
+                        </div>
+                        <span className="text-xs sm:text-sm font-black bg-slate-900 text-amber-300 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+                          {crData.name}
+                        </span>
+                        <span className="text-[11px] font-bold text-amber-950 mt-1">
+                          {crData.banglaName}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Crown overlay */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-amber-400 rounded-2xl border-2 border-slate-900 flex items-center justify-center text-2xl shadow-comic animate-bounce">
+                {/* Floating Crown overlay */}
+                <div className="absolute -top-3.5 -left-3.5 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-amber-300 via-yellow-300 to-amber-500 rounded-2xl border-2 border-slate-900 flex items-center justify-center text-2xl sm:text-3xl shadow-comic animate-bounce z-10">
                   👑
                 </div>
 
-                {/* Change photo button */}
-                <button
-                  type="button"
-                  onClick={() => setIsPhotoModalOpen(true)}
-                  className="absolute bottom-2 right-2 bg-slate-900 hover:bg-slate-800 text-white p-2.5 rounded-xl border-2 border-white shadow-comic text-xs font-bold flex items-center gap-1 active:scale-95 transition-transform"
-                  title="সিআর এর ছবি পরিবর্তন করুন"
-                >
-                  <Camera className="w-4 h-4 text-amber-300" />
-                  <span className="text-[11px]">ছবি বদলান</span>
-                </button>
+                {/* Sparkling VIP Badge */}
+                <div className="absolute -bottom-2.5 -right-2.5 bg-slate-900 text-amber-300 px-3 py-1 rounded-xl border-2 border-amber-300 font-black text-[11px] sm:text-xs shadow-comic flex items-center gap-1 z-10">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>কমান্ডার</span>
+                </div>
               </div>
 
               {/* ID Badge Card */}
-              <div className="mt-4 bg-white px-4 py-2 rounded-2xl border-2 border-slate-900 shadow-comic text-center w-full">
+              <div className="mt-5 bg-white px-5 py-2.5 rounded-2xl border-2 border-slate-900 shadow-comic text-center w-full max-w-[240px]">
                 <span className="text-[10px] uppercase font-black tracking-wider text-slate-500 block">
                   স্টুডেন্ট আইডি
                 </span>
-                <span className="text-sm font-black text-rose-600 font-mono">
+                <span className="text-sm font-black text-rose-600 font-mono tracking-wide">
                   {crData.idNumber}
                 </span>
               </div>
@@ -160,9 +138,7 @@ export const CrSection: React.FC = () => {
                 </p>
               </div>
 
-              {/* Exact Prompt Requirement Highlight:
-                  "Write a short funny caption under her ID: she is always first in every task and the Principal sir's right hand."
-              */}
+              {/* Highlight Caption */}
               <div className="p-4 bg-amber-200/80 rounded-2xl border-3 border-slate-900 shadow-comic">
                 <p className="text-base sm:text-lg font-black text-slate-900 flex items-center justify-center md:justify-start gap-2">
                   <span>✨</span>
@@ -216,15 +192,6 @@ export const CrSection: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Photo Upload Modal for CR */}
-      <PhotoUploadModal
-        isOpen={isPhotoModalOpen}
-        onClose={() => setIsPhotoModalOpen(false)}
-        personName={crData.name}
-        currentPhoto={crData.photoUrl}
-        onSavePhoto={handleSavePhoto}
-      />
     </section>
   );
 };
