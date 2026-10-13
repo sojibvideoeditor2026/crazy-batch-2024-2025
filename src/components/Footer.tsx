@@ -48,8 +48,8 @@ export const Footer: React.FC = () => {
           <div className="text-center md:text-left space-y-2">
             <div className="flex items-center justify-center md:justify-start gap-2">
               <span className="text-3xl">🤪</span>
-              <span className="text-2xl font-black text-amber-400">
-                পাগলা ব্যাস ২০২৪-২০২৫
+              <span className="text-2xl font-black text-amber-400 font-sans">
+                Crazy Batch ২০২৪-২০২৫
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 font-medium">
@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="mt-6 text-center text-[10px] text-slate-400">
-          © ২০২৪–২০২৫ পাগলা ব্যাস | সর্বস্বত্ব ট্যুর ও আড্ডায় সংরক্ষিত 🚌✨
+          © ২০২৪–২০২৫ Crazy Batch | সর্বস্বত্ব ট্যুর ও আড্ডায় সংরক্ষিত 🚌✨
         </div>
       </div>
     </footer>

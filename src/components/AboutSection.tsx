@@ -13,7 +13,7 @@ export const AboutSection: React.FC = () => {
             ইতিহাসের আসল ইতিহাস
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-            কেন আমাদের নাম <span className="text-rose-600 underline decoration-amber-400 decoration-wavy">"পাগলা ব্যাস"</span>?
+            কেন আমাদের নাম <span className="text-rose-600 underline decoration-amber-400 decoration-wavy">"Crazy Batch"</span>?
           </h2>
           <p className="mt-3 text-slate-700 font-bold text-base sm:text-lg">
             যেখানে ক্লাসের গম্ভীর লেকচারও আমাদের হাসাহাসিতে কমেডি শো হয়ে যায়!
@@ -40,7 +40,7 @@ export const AboutSection: React.FC = () => {
               <p className="text-lg sm:text-xl font-bold leading-relaxed">
                 আমাদের শ্রদ্ধেয় স্যার আদর করে ভালোবেসে আমাদের নাম দিয়েছেন{' '}
                 <span className="bg-rose-100 text-rose-700 px-2 py-0.5 rounded-lg font-black border border-rose-300">
-                  "পাগলা ব্যাস"
+                  "Crazy Batch"
                 </span>{' '}
                 কারণ আমরা সাধারণ মানের পাগল না—একদম এক্সট্রা লেভেলের খাঁটি পাগল! 🤪
               </p>

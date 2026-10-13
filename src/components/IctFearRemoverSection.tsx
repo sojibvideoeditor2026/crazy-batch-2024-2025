@@ -164,7 +164,7 @@ export const IctFearRemoverSection: React.FC = () => {
                   "আইসিটি কম্পিউটারের বিষয়, খাতার না! 😄 কিন্তু আমাদের পরীক্ষা হয়েছে খাতায়। তাই আসুন কম্পিউটারের কাজগুলো সত্যিকারভাবে শিখি, যা চাকরি ও জীবনে কাজে লাগবে।"
                 </h3>
                 <p className="text-xs sm:text-sm font-extrabold text-slate-800 mt-2">
-                  — ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ, পাগলা ব্যাচ ২০২৪-২৫
+                  — ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ, Crazy Batch ২০২৪-২৫
                 </p>
               </div>
             </div>
@@ -591,7 +591,7 @@ export const IctFearRemoverSection: React.FC = () => {
 
               <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
                 <span className="text-[11px] text-amber-200/80 font-medium flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" /> পাগলা ব্যাচের যে কেউ সাহায্য করতে প্রস্তুত!
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Crazy Batch-এর যে কেউ সাহায্য করতে প্রস্তুত!
                 </span>
                 <button
                   type="submit"

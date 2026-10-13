@@ -57,8 +57,8 @@ export const HeroSection: React.FC = () => {
         {/* Big Hero Title */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tight leading-tight">
           <span className="relative inline-block">
-            <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-red-500 to-rose-600 drop-shadow-sm">
-              পাগলা ব্যাস
+            <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-red-500 to-rose-600 drop-shadow-sm font-sans tracking-tight">
+              Crazy Batch
             </span>
             <span className="absolute -bottom-2 left-0 w-full h-4 sm:h-6 bg-amber-300 -z-0 rotate-1 rounded-sm"></span>
           </span>
@@ -67,8 +67,18 @@ export const HeroSection: React.FC = () => {
           </span>
         </h1>
 
+        {/* বাংলা ট্যাগলাইন */}
+        <div className="mt-3">
+          <p className="text-base sm:text-xl font-bold text-slate-800">
+            &ldquo;আমরাই পাগলা ব্যাস 😜&rdquo;{' '}
+            <span className="text-sm sm:text-base font-semibold text-rose-600">
+              (২০২৪-২০২৫, ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ)
+            </span>
+          </p>
+        </div>
+
         {/* Funny Taglines */}
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-2xl font-bold text-slate-800 leading-relaxed bg-white/80 backdrop-blur-xs py-3 px-6 rounded-2xl border-2 border-slate-900 shadow-comic">
+        <p className="mt-5 max-w-2xl mx-auto text-lg sm:text-2xl font-bold text-slate-800 leading-relaxed bg-white/80 backdrop-blur-xs py-3 px-6 rounded-2xl border-2 border-slate-900 shadow-comic">
           &ldquo;পড়াশোনায় মন নাই, কিন্তু ট্যুরে সবার আগে ভাই!&rdquo; 🚌💨
           <span className="block text-xs sm:text-sm font-semibold text-rose-600 mt-1">
             (ক্লাসে উপস্থিতি ০%, তবে ট্যুরে ১০০% হাজিরা কনফার্ম!)
@@ -99,7 +109,7 @@ export const HeroSection: React.FC = () => {
             className="px-5 py-3.5 rounded-2xl bg-rose-400 hover:bg-rose-300 border-3 border-slate-900 text-slate-950 font-black text-sm sm:text-base shadow-comic-lg hover:shadow-comic transition-all active:translate-y-1 flex items-center gap-2 cursor-pointer"
           >
             <Sparkles className="w-5 h-5 text-amber-200 fill-amber-300" />
-            <span>জয় পাগলা ব্যাস! 💥</span>
+            <span>জয় Crazy Batch! 💥</span>
           </button>
         </div>
 

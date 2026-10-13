@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
 
   return (
     <header className="sticky top-0 z-40 bg-amber-400 border-b-4 border-slate-900 shadow-sm select-none">
-      {/* উপরের সারি: লোগো + পাগলা ব্যাস ২৪-২৫ (বামে) এবং একশনে তিনটি বাটন (ডানে) */}
+      {/* উপরের সারি: লোগো + Crazy Batch ২৪-২৫ (বামে) এবং একশনে তিনটি বাটন (ডানে) */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
           {/* লোগো ও টাইটেল (এক লাইনে, কোনো লাইন ব্রেক নেই) */}
@@ -45,8 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAddFriend }) => {
             />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 whitespace-nowrap">
-                <span className="font-black text-slate-900 text-base sm:text-lg tracking-tight whitespace-nowrap">
-                  পাগলা ব্যাস
+                <span className="font-black text-slate-900 text-base sm:text-lg tracking-tight whitespace-nowrap font-sans">
+                  Crazy Batch
                 </span>
                 <span className="bg-slate-900 text-amber-300 text-[10px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider whitespace-nowrap">
                   ২৪-২৫

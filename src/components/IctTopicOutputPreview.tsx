@@ -565,7 +565,7 @@ export const IctTopicOutputPreview: React.FC<IctTopicOutputPreviewProps> = ({ to
                   </ul>
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono text-right">
-                  পাগলা ব্যাচ প্রেজেন্টেশন
+                  Crazy Batch প্রেজেন্টেশন
                 </div>
               </div>
               <p className="text-xs text-emerald-300 mt-3 font-semibold">

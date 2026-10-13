@@ -1,6 +1,6 @@
 {
-  "name": "পাগলা ব্যাস ২০২৪-২০২৫",
-  "description": "টঙ্গী সরকারি কলেজ, গাজীপুর - ইসলামের ইতিহাস ও সংস্কৃতি বিভাগের পাগলা ব্যাস ২০২৪-২০২৫ এর রঙিন ও মজাদার ওয়েবসাইট।",
+  "name": "Crazy Batch 2024-25",
+  "description": "Crazy Batch 2024-25 | টঙ্গী সরকারি কলেজ, গাজীপুর - ইসলামের ইতিহাস ও সংস্কৃতি বিভাগের রঙিন ও মজাদার ওয়েবসাইট।",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
