@@ -231,7 +231,7 @@ export const INITIAL_FRIENDS: Friend[] = [
     likes: 62,
   },
 
-  // --- নতুন যুক্ত হওয়া ১৮ জন বন্ধু ---
+  // --- সহপাঠী বন্ধুগণ ---
   {
     id: "husain-ahammed",
     slug: "husain-ahammed",
@@ -311,19 +311,6 @@ export const INITIAL_FRIENDS: Friend[] = [
     likes: 35,
   },
   {
-    id: "labanno-rakib",
-    slug: "labanno-jawjatu-rakib",
-    name: "Labanno Jawjatu Rakib",
-    banglaName: "লাবণ্য জাওজাতু রাকিব",
-    role: "ব্যাচের মিষ্টি রোমিও 💫",
-    funnyLine: "কথা ও ব্যবহারে যার মিষ্টি লাবণ্য ঝরে পড়ে, সবার মন জয় করাই যার কাজ!",
-    photoUrl: `${import.meta.env.BASE_URL}photos/labanno-jawjatu-rakib.jpg`,
-    badgeEmoji: "💐",
-    cardColor: "from-violet-100 to-fuchsia-100 border-fuchsia-300",
-    tags: ["মিষ্টি স্বভাব", "লাবণ্যময়", "জনপ্রিয়"],
-    likes: 48,
-  },
-  {
     id: "mahadi-hassan",
     slug: "mahadi-hassan",
     name: "Mahadi Hassan",
@@ -368,7 +355,7 @@ export const INITIAL_FRIENDS: Friend[] = [
     name: "MD Badhon",
     banglaName: "মোঃ বাঁধন",
     role: "বন্ধুত্বের শক্ত বাঁধন 🔗",
-    funnyLine: "নামের মতোই পুরো ব্যাসের বন্ধুদের ভালোবাসার শক্ত বাঁধনে বেঁধে রাখতে ভালোবাসে!",
+    funnyLine: "নামের মতোই পুরো ব্যাচের বন্ধুদের ভালোবাসার শক্ত বাঁধনে বেঁধে রাখতে ভালোবাসে!",
     photoUrl: `${import.meta.env.BASE_URL}photos/md-badhon.jpg`,
     badgeEmoji: "❤️",
     cardColor: "from-rose-100 to-pink-100 border-pink-300",
@@ -467,7 +454,7 @@ export const INITIAL_FRIENDS: Friend[] = [
     likes: 37,
   },
 
-  // --- নতুন যুক্ত হওয়া ১৭ জন বন্ধু ---
+  // --- সহপাঠী বন্ধুগণ ---
   {
     id: "abir-ahmed",
     slug: "abir-ahmed",
@@ -636,19 +623,6 @@ export const INITIAL_FRIENDS: Friend[] = [
     cardColor: "from-sky-100 to-teal-100 border-sky-300",
     tags: ["শান্ত নদী", "নির্ভরযোগ্য", "শুভাকাঙ্ক্ষী"],
     likes: 32,
-  },
-  {
-    id: "shawon-shilu",
-    slug: "shawon-shilu",
-    name: "Shawon Shilu",
-    banglaName: "শাওন শিলু",
-    role: "ক্যাম্পাসের আড্ডার মধ্যমণি 🎸",
-    funnyLine: "আড্ডা যেখানেই জমুক, শিলু ভাইয়ের উপস্থিতি ছাড়া সেই আড্ডার ষোলআনা পূর্ণ হয় না!",
-    photoUrl: `${import.meta.env.BASE_URL}photos/shawon-shilu.jpg`,
-    badgeEmoji: "🎉",
-    cardColor: "from-orange-100 to-rose-100 border-orange-300",
-    tags: ["আড্ডার প্রাণ", "মিষ্টভাষী", "জনপ্রিয়"],
-    likes: 42,
   },
   {
     id: "shurab-ahmad",

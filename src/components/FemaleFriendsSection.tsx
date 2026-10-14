@@ -30,7 +30,7 @@ export const FemaleFriendsSection: React.FC<FemaleFriendsSectionProps> = ({
             বান্ধবী বাহিনী 👩‍🎓
           </h2>
           <p className="mt-3 text-zinc-400 font-medium text-sm sm:text-base">
-            আমাদের ব্যাসের সম্মানিত সহপাঠী ও বান্ধবীগণ ({femaleFriendsList.length} জন)
+            আমাদের ব্যাচের সম্মানিত সহপাঠী ও বান্ধবীগণ ({femaleFriendsList.length} জন)
           </p>
         </div>
 

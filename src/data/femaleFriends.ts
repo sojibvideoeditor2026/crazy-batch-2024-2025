@@ -66,11 +66,12 @@ export const FEMALE_POETIC_QUOTES: { [key: string]: { badge: string; quote: stri
   "ff-48": { badge: "💛 বন্ধুবৎসল", quote: "বন্ধুর বিপদে নিঃশব্দে পাশে এসে দাঁড়ানো অকৃত্রিম সঙ্গী 🤝" },
   "ff-49": { badge: "🌙 স্বপ্নবাজ", quote: "অথৈ সম্ভাবনায় ভরা এক বুক আশা ও আগামীর শুভ ডাক 🌠" },
   "ff-50": { badge: "✨ সৃজনশীল", quote: "প্রতিটি পদক্ষেপে রুচি ও আত্মমর্যাদার সুন্দর স্বাক্ষর 🪶" },
+  "ff-51": { badge: "🌸 মার্জিত স্বভাব", quote: "লাবণ্যময় ব্যক্তিত্ব আর অমায়িক ব্যবহারে সবার কাছে অত্যন্ত সম্মানিত ও প্রিয় 🌷" },
 };
 
 /**
  * =====================================================================
- * 👉 বান্ধবী বাহিনীর মূল তালিকা (৫০ জন বান্ধবী):
+ * 👉 বান্ধবী বাহিনীর মূল তালিকা (৫১ জন বান্ধবী):
  * প্রতিটি কার্ডে সংরক্ষিত আছে নাম, ব্যাজ ও একক কাব্যিক লাইন।
  * =====================================================================
  */
@@ -125,4 +126,5 @@ export const FEMALE_FRIENDS_DATA: FemaleFriend[] = [
   { id: "ff-48", name: "Ãriyâ Ïslãm", badge: FEMALE_POETIC_QUOTES["ff-48"].badge, quote: FEMALE_POETIC_QUOTES["ff-48"].quote, photoUrl: DEFAULT_FEMALE_AVATAR },
   { id: "ff-49", name: "Athoi Yasmin Noor", badge: FEMALE_POETIC_QUOTES["ff-49"].badge, quote: FEMALE_POETIC_QUOTES["ff-49"].quote, photoUrl: DEFAULT_FEMALE_AVATAR },
   { id: "ff-50", name: "Fahrin Jaman Jerin", badge: FEMALE_POETIC_QUOTES["ff-50"].badge, quote: FEMALE_POETIC_QUOTES["ff-50"].quote, photoUrl: DEFAULT_FEMALE_AVATAR },
+  { id: "ff-51", name: "Labanno Jawjatu Rakib", badge: FEMALE_POETIC_QUOTES["ff-51"].badge, quote: FEMALE_POETIC_QUOTES["ff-51"].quote, photoUrl: DEFAULT_FEMALE_AVATAR },
 ];

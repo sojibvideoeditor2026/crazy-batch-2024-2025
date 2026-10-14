@@ -70,7 +70,7 @@ export const HeroSection: React.FC = () => {
         {/* বাংলা ট্যাগলাইন */}
         <div className="mt-3">
           <p className="text-base sm:text-xl font-bold text-slate-800">
-            &ldquo;আমরাই পাগলা ব্যাস 😜&rdquo;{' '}
+            &ldquo;আমরাই পাগলা ব্যাচ 😜&rdquo;{' '}
             <span className="text-sm sm:text-base font-semibold text-rose-600">
               (২০২৪-২০২৫, ইসলামের ইতিহাস ও সংস্কৃতি বিভাগ)
             </span>
